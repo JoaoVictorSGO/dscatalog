@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 	
-	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StandardError> entityNotFoud(EntityNotFoundException e, HttpServletRequest request){
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<StandardError> entityNotFoud(ResourceNotFoundException e, HttpServletRequest request){
 		
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
