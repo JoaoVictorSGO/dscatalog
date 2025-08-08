@@ -2,12 +2,15 @@ package br.com.joaovictor.dscatalog.services;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.joaovictor.dscatalog.dtos.CategoryDTO;
 import br.com.joaovictor.dscatalog.entities.Category;
 import br.com.joaovictor.dscatalog.repositories.CategoryRepository;
+import br.com.joaovictor.dscatalog.services.exceptions.DatabaseException;
 import br.com.joaovictor.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -53,6 +56,17 @@ public class CategoryService {
 			throw new ResourceNotFoundException("Id not found " + id);
 		}
 		
+	}
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public void delete(Long id) {
+		if(!repository.existsById(id)) throw new ResourceNotFoundException("Resource not found");
+		
+		try {
+			repository.deleteById(id);
+		}catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Referential integration failure");
+		}
 	}
 	
 	
