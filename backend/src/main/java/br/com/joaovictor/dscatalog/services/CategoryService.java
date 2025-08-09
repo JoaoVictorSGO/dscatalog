@@ -1,8 +1,7 @@
 package br.com.joaovictor.dscatalog.services;
-
-import java.util.List;
-
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import br.com.joaovictor.dscatalog.services.exceptions.DatabaseException;
 import br.com.joaovictor.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
+
 @Service
 public class CategoryService {
 	private CategoryRepository repository;
@@ -23,10 +23,8 @@ public class CategoryService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll(){
-		return repository.findAll()
-				.stream()
-				.map(x -> new CategoryDTO(x)).toList();
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
+		return repository.findAll(pageRequest).map(CategoryDTO::new);
 	}
 
 	@Transactional(readOnly = true)
